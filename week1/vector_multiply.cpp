@@ -49,6 +49,11 @@ int main(int argc, char **argv) {
   printf("[Rank %d] Received %d elements. First element is %d. Processing...\n",
          world_rank, elements_per_proc, local_data[0]);
 
+  // Flush the stdout to ensure ordered output
+  fflush(stdout);
+
+  MPI_Barrier(MPI_COMM_WORLD);
+
   for (int i = 0; i < elements_per_proc; i++) {
     local_data[i] *= 2;
   }
@@ -58,6 +63,8 @@ int main(int argc, char **argv) {
   //            recv_buf, recv_count, recv_type, root, comm)
   MPI_Gather(local_data.data(), elements_per_proc, MPI_INT, global_data.data(),
              elements_per_proc, MPI_INT, 0, MPI_COMM_WORLD);
+
+  MPI_Barrier(MPI_COMM_WORLD);
 
   // 6. Verification (Master only)
   if (world_rank == 0) {
@@ -75,7 +82,7 @@ int main(int argc, char **argv) {
 
 /**
  * To setup the system
- * On Ubuntu: sudo apt install openmpi-bin libopenmpi-dev build-essential
+ * On Ubuntu: sudo apt install openmpi-bin libopenmpi-dev build-essential -y
  * On MacOS: brew install open-mpi
  * To compile: mpic++ vector_multiply.cpp -o vector_mult.bin
  * To run
