@@ -40,8 +40,8 @@ int main(int argc, char **argv) {
   // 3. SCATTER: Distribute data from Master to everyone
   // MPI_Scatter(send_buf, send_count_per_process, send_type,
   //             recv_buf, recv_count, recv_type, root, comm)
-  MPI_Scatter(global_data.data(), elements_per_proc, MPI_INT, local_data.data(),
-              elements_per_proc, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Scatter(global_data.data(), elements_per_proc, MPI_INT, 
+              local_data.data(), elements_per_proc, MPI_INT, 0, MPI_COMM_WORLD);
 
   // 4. COMPUTE: Distributed Processing
   // Each node multiplies its own 250 elements by 2.
@@ -61,8 +61,8 @@ int main(int argc, char **argv) {
   // 5. GATHER: Collect results back to Master
   // MPI_Gather(send_buf, send_count, send_type,
   //            recv_buf, recv_count, recv_type, root, comm)
-  MPI_Gather(local_data.data(), elements_per_proc, MPI_INT, global_data.data(),
-             elements_per_proc, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Gather(local_data.data(), elements_per_proc, MPI_INT, 
+             global_data.data(), elements_per_proc, MPI_INT, 0, MPI_COMM_WORLD);
 
   MPI_Barrier(MPI_COMM_WORLD);
 
